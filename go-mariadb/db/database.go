@@ -25,8 +25,12 @@ func LoadMariaDB() {
 	}
 
 	if DBUser != nil {
-		DBUser.AutoMigrate(&models.User{})
-		fmt.Println("Successfully connected to MariaDB and migrated schema")
+		err := DBUser.AutoMigrate(&models.User{})
+		if err != nil {
+			fmt.Printf("Failed to migrate schema: %v\n", err)
+		} else {
+			fmt.Println("Successfully connected to MariaDB and migrated schema")
+		}
 	} else {
 		fmt.Println("Failed to connect to MariaDB")
 	}
