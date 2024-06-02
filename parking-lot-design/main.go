@@ -1,21 +1,5 @@
 package main
 
-type Address struct {
-	Country string
-	State   string
-	City    string
-	PinCode int
-	// Add others
-}
-
-type Account struct {
-	Name     string
-	Email    string
-	Password string
-	EmpId    string
-	Address  Address
-}
-
 type Vehicle struct {
 	LicenseNumber string
 	VehicleType   VehicleType
