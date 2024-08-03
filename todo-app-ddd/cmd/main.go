@@ -11,31 +11,34 @@ import (
 	todoHttp "todo-app/internal/interfaces/http"
 )
 
+// main is the entry point of the application.
 func main() {
-	// MongoDB connection string
+	// Get MongoDB connection string from environment variable.
+	// If not set, use the default connection string.
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
 		mongoURI = "mongodb://admin:password@localhost:27017"
 	}
 
-	// Initialize repository
+	// Initialize repository using the MongoDB connection string.
 	repo, err := persistence.NewMongoRepository(mongoURI, "todo_db", "todos")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to initialize repository: %v", err)
 	}
 
-	// Initialize handlers
+	// Initialize handlers.
 	createTodoHandler := commands.NewCreateTodoHandler(repo)
 	completeTodoHandler := commands.NewCompleteTodoHandler(repo)
 	getTodosHandler := queries.NewGetTodosHandler(repo)
 
-	// Initialize API handler
+	// Initialize API handler.
 	todoHandler := api.NewTodoHandler(createTodoHandler, completeTodoHandler, getTodosHandler)
 
-	// Initialize router
+	// Initialize router.
 	router := todoHttp.NewRouter(todoHandler)
 
-	// Start server
+	// Start server.
+	// Log the server start message and start the server on port 8080.
 	log.Println("Server starting on :8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
