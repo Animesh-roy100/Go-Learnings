@@ -32,7 +32,7 @@ func fetchWeatherOfCity(city string, ch chan<- string, wg *sync.WaitGroup) inter
 		return data
 	}
 
-	ch <- fmt.Sprintf("This is the %s", city)
+	ch <- fmt.Sprintf("This is the %s and city temp: %f", city, data.Main.Temp)
 
 	return data
 }
