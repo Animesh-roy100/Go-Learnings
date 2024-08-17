@@ -2,6 +2,7 @@ package bookstrap
 
 import (
 	"book-store/internal/application/command"
+	"book-store/internal/application/query"
 	"book-store/internal/domain/book"
 	"book-store/internal/infrastructure/http/handler"
 	"book-store/internal/infrastructure/postgres"
@@ -26,12 +27,13 @@ func NewRouter() *gin.Engine {
 	bookService := book.NewService(bookRepo)
 
 	createBookHandler := command.NewCreateBookHandler(bookService)
+	getBookByISBNHandler := query.NewGetBookByISBNHandler(bookService)
 
-	bookHandler := handler.NewBookHandler(createBookHandler)
+	bookHandler := handler.NewBookHandler(createBookHandler, getBookByISBNHandler)
 
 	router.POST("/books", bookHandler.CreateBook)
+	router.GET("/books/:isbn", bookHandler.GetBookByISBN)
 	// router.GET("/books", bookHandler.ListBooks)
-	// router.GET("/books/:id", bookHandler.GetBook)
 	// router.PUT("/books/:id", bookHandler.UpdateBook)
 	// router.DELETE("/books/:id", bookHandler.DeleteBook)
 

@@ -1,19 +1,26 @@
 package query
 
-// type GetBook struct {
-// 	ID valueobjects.ID
-// }
+import (
+	"book-store/internal/domain/book"
+	"book-store/pkg/valueobjects"
+)
 
-// type GetBookHandler struct {
-// 	bookRepo book.BookRepository
-// }
+type GetBookByISBN struct {
+	ISBN string
+}
 
-// func NewGetBookHandler(bookRepo book.BookRepository) *GetBookHandler {
-// 	return &GetBookHandler{
-// 		bookRepo: bookRepo,
-// 	}
-// }
+type GetBookByISBNHandler struct {
+	bookService *book.Service
+}
 
-// func (h *GetBookHandler) Handle(query GetBook) (*book.Book, error) {
-// 	return h.bookRepo.FindByID(query.ID)
-// }
+func NewGetBookByISBNHandler(bookService *book.Service) *GetBookByISBNHandler {
+	return &GetBookByISBNHandler{bookService: bookService}
+}
+
+func (h *GetBookByISBNHandler) Handle(query GetBookByISBN) (*book.Book, error) {
+	isbn, err := valueobjects.NewISBN(query.ISBN)
+	if err != nil {
+		return nil, err
+	}
+	return h.bookService.GetBookByISBN(isbn)
+}
